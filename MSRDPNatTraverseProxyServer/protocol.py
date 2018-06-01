@@ -182,9 +182,9 @@ class NatTraverseProtocol(Protocol):
         :param content: 请求的具体内容
         :return: id
         """
-        LOG.debug('调用: get_client_id')
+        LOG.debug('invoking: get_client_id')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return -1
 
         # 不断产生随机数,保证随机数不能和其他客户端的id重复
@@ -200,15 +200,15 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: post_client_info')
+        LOG.debug('invoking: post_client_info')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
-            LOG.error('存在相同的客户端信息,无法添加.')
+            LOG.error('this client already existed, fail to add.')
             return False
-        LOG.debug('已经有的成员个数: {}'.format(CLIENT_GROUP.count()))
+        LOG.debug('this client count: {}'.format(CLIENT_GROUP.count()))
         return CLIENT_GROUP.append(Client(content['id'], 0, content['value']['name'],
                                               content['value']['description']))
 
@@ -219,15 +219,15 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: get_control_request')
+        LOG.debug('invoking: get_control_request')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
             return CLIENT_GROUP.get_member(content['id']).control_request
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group : {}".format(content['id']))
             return False
 
     @staticmethod
@@ -237,16 +237,16 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: post_control_request')
+        LOG.debug('invoking: post_control_request')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
             CLIENT_GROUP.get_member(content['id']).control_request = content['value']
             return True
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return False
 
     @staticmethod
@@ -256,27 +256,27 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: 端口号
         """
-        LOG.debug('调用: get_tunnel_port')
+        LOG.debug('invoking: get_tunnel_port')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return -1
 
         if CLIENT_GROUP.has_member(content['id']):
             if content['value']:
                 while True:
                     ports = get_all_listen_ports()
-                    LOG.debug('正在监听的端口号: {}'.format(ports))
+                    LOG.debug('listen port: {}'.format(ports))
                     port = get_rand_num(10000, 20000)
                     if port not in ports:
                         CLIENT_GROUP.get_member(content['id']).tunnel_port = port
-                        LOG.debug('生成合法的端口号: {}'.format(port))
+                        LOG.debug('generate rightful port number: {}'.format(port))
                         return port
             else:
                 port = CLIENT_GROUP.get_member(content['id']).tunnel_port
-                LOG.info('读取tunnel_port: {}'.format(port))
+                LOG.info('read tunnel_port: {}'.format(port))
                 return port
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return -1
 
     @staticmethod
@@ -286,16 +286,16 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: post_tunnel_port')
+        LOG.debug('invoking: post_tunnel_port')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
             CLIENT_GROUP.get_member(content['id']).tunnel_port = content['value']
             return True
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return False
 
     @staticmethod
@@ -305,18 +305,18 @@ class NatTraverseProtocol(Protocol):
         :param content:
         :return:
         """
-        LOG.debug('调用: get_tunnel_status')
+        LOG.debug('invoking: get_tunnel_status')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
-            LOG.info('隧道端口号: {}'.format(CLIENT_GROUP.get_member(content['id']).tunnel_port))
+            LOG.info('tunnel port number: {}'.format(CLIENT_GROUP.get_member(content['id']).tunnel_port))
             status = CLIENT_GROUP.get_member(content['id']).tunnel_port in get_all_listen_ports()
-            LOG.debug('隧道状态: {}'.format(status))
+            LOG.debug('tunnel status: {}'.format(status))
             return status
         else:
-            LOG.error('分组中不存在的id: {}'.format(content['id']))
+            LOG.error('this id is inexistence in group: {}'.format(content['id']))
             return False
 
     @staticmethod
@@ -326,15 +326,15 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: get_is_under_control')
+        LOG.debug('invoking: get_is_under_control')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
             return CLIENT_GROUP.get_member(content['id']).is_under_control
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return False
 
     @staticmethod
@@ -344,16 +344,16 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: post_is_under_control')
+        LOG.debug('invoking: post_is_under_control')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
             CLIENT_GROUP.get_member(content['id']).is_under_control = content['value']
             return True
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return False
 
     @staticmethod
@@ -363,15 +363,15 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: id
         """
-        LOG.debug('调用: get_peered_remote_id')
+        LOG.debug('invoking: get_peered_remote_id')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return -1
 
         if CLIENT_GROUP.has_member(content['id']):
             return CLIENT_GROUP.get_member(content['id']).peered_remote_id
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return -1
 
     @staticmethod
@@ -381,17 +381,17 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: post_peered_remote_id')
+        LOG.debug('invoking: post_peered_remote_id')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return -1
 
         if CLIENT_GROUP.has_member(content['id']):
             CLIENT_GROUP.get_member(content['id']).peered_remote_id = content['value']
-            LOG.debug("修改客户端({})的配对客户端为{}".format(content['id'], content['value']))
+            LOG.debug("modify client({}) matches client to {}".format(content['id'], content['value']))
             return True
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return False
 
     @staticmethod
@@ -401,15 +401,15 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: 数值
         """
-        LOG.debug('调用: get_keep_alive_count')
+        LOG.debug('invoking: get_keep_alive_count')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return -1
 
         if CLIENT_GROUP.has_member(content['id']):
             return CLIENT_GROUP.get_member(content['id']).keep_alive_count
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return -1
 
     @staticmethod
@@ -419,16 +419,16 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: post_keep_alive_count')
+        LOG.debug('invoking: post_keep_alive_count')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
             CLIENT_GROUP.get_member(content['id']).keep_alive_count = content['value']
             return True
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return False
 
     @staticmethod
@@ -438,17 +438,17 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return: True/False
         """
-        LOG.debug('调用: get_is_online')
+        LOG.debug('invoking: get_is_online')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         if CLIENT_GROUP.has_member(content['id']):
             is_online = CLIENT_GROUP.has_member(content['id'])
-            LOG.debug('客户端({})在线状态: {}'.format(content['id'], is_online))
+            LOG.debug('client ({}) online status: {}'.format(content['id'], is_online))
             return is_online
         else:
-            LOG.error("分组中不存在的id: {}".format(content['id']))
+            LOG.error("this id is inexistence in group: {}".format(content['id']))
             return False
 
     @staticmethod
@@ -458,9 +458,9 @@ class NatTraverseProtocol(Protocol):
         :param content: 具体内容
         :return:列表
         """
-        LOG.debug('调用: get_online_client_list')
+        LOG.debug('invoking: get_online_client_list')
         if not isinstance(content, dict):
-            LOG.error("消息内容格式不正确: {}".format(content))
+            LOG.error("content format is incorrect: {}".format(content))
             return False
 
         online_list = dict()
@@ -481,5 +481,5 @@ class NatTraverseFactory(Factory):
         pass
 
     def buildProtocol(self, addr):
-        LOG.debug('客户端: {}'.format(addr))
+        LOG.debug('client: {}'.format(addr))
         return NatTraverseProtocol()
