@@ -61,7 +61,7 @@ class Client(object):
         if isinstance(value, int):
             self._g_id = value
         else:
-            raise TypeError("设置的值不是int类型")
+            raise TypeError("this value type is not int")
 
     @property
     def name(self):
@@ -81,7 +81,7 @@ class Client(object):
         if isinstance(value, str):
             self._name = value
         else:
-            raise TypeError('设置的值不是str类型')
+            raise TypeError('this value type is not str')
 
     @property
     def description(self):
@@ -101,7 +101,7 @@ class Client(object):
         if isinstance(value, str):
             self._description = value
         else:
-            raise TypeError('设置的值不是str类型')
+            raise TypeError('this value type is not str')
 
     @property
     def control_request(self):
@@ -121,7 +121,7 @@ class Client(object):
         if isinstance(value, bool):
             self._control_request = value
         else:
-            raise TypeError("设置的值不是bool类型")
+            raise TypeError("this value type is not bool")
 
     @property
     def tunnel_port(self):
@@ -141,7 +141,7 @@ class Client(object):
         if isinstance(value, int):
             self._tunnel_port = value
         else:
-            raise TypeError("设置的值不是int类型")
+            raise TypeError("this value type is not int")
 
     @property
     def is_under_control(self):
@@ -161,7 +161,7 @@ class Client(object):
         if isinstance(value, bool):
             self._is_under_control = value
         else:
-            raise TypeError("设置的值不是bool类型")
+            raise TypeError("this value type is not bool")
 
     @property
     def peered_remote_id(self):
@@ -181,7 +181,7 @@ class Client(object):
         if isinstance(value, int):
             self._peered_remote_id = value
         else:
-            raise TypeError("设置的值不是int类型")
+            raise TypeError("this value type is not int")
 
     @property
     def keep_alive_count(self):
@@ -201,7 +201,7 @@ class Client(object):
         if isinstance(value, int):
             self._keep_alive_count = value
         else:
-            raise TypeError("设置的值不是int类型")
+            raise TypeError("this value type is not int")
 
     def __str__(self):
         return 'id: {0}, ' \
@@ -257,7 +257,7 @@ class ClientGroup:
         if isinstance(value, str):
             self._name = value
         else:
-            raise TypeError("设置的值不是str类型")
+            raise TypeError("this value type is not str")
 
     @property
     def capacity(self):
@@ -277,7 +277,7 @@ class ClientGroup:
         if isinstance(value, int):
             self._capacity = value
         else:
-            raise TypeError("设置的值不是int类型")
+            raise TypeError("this value type is not int")
 
     def has_member(self, client_id):
         """
@@ -305,7 +305,7 @@ class ClientGroup:
                     self._members[client.id] = client
                     return True
         else:
-            raise TypeError("添加的类型不是Client类型")
+            raise TypeError("the add value is not Client")
 
     def remove(self, client_id):
         """
