@@ -44,7 +44,7 @@ def load_config():
     if validate_config(config):
         return config
     else:
-        print('配置文件已经损坏.')
+        print('config file has be destroyed .')
         return None
 
 
