@@ -2,9 +2,6 @@
 # coding: utf-8
 # 文件：utils.py
 # 作者：Christopher Lee
-# 博客：http://www.cnblogs.com/chriscabin
-# 主页：https://www.github.com/chrisleegit
-# 邮箱：christopherlee1993@outlook.com
 # 功能：一些工具类函数
 # 参数：无
 # 版本：0.1
@@ -72,7 +69,7 @@ def get_all_listen_ports():
             elif sys_type == "Darwin":
                 listen_ports.add(int(column[3].split('.')[-1]))
             else:
-                LOG.debug('未能识别的操作系统类型')
+                LOG.debug('the operating system unrecognizable')
     LOG.debug('listen_ports: {}'.format(listen_ports))
     return listen_ports
 
