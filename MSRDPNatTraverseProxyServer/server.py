@@ -47,7 +47,7 @@ def check_alive_thread():
         # 移除那些离线的客户端
         for c_id in offline_id_list:
             if CLIENT_GROUP.remove(c_id):
-                LOG.debug('id: {}的客户端已经离线'.format(c_id))
+                LOG.debug('id: {} client is offline'.format(c_id))
 
         sleep(CHECK_INTERVAL)
 
@@ -64,7 +64,7 @@ class ProxyServer:
         启动代理服务器并监听
         :return:
         """
-        print('启动代理服务器, 监听端口: {}'.format(self._port))
+        print('start proxy sever,listen port: {}'.format(self._port))
         reactor.listenTCP(self._port, NatTraverseFactory())
         reactor.run()
 
@@ -73,7 +73,7 @@ class ProxyServer:
         停止代理服务器
         :return:
         """
-        print('停止监听端口{}, 停止代理服务器'.format(self._port))
+        print('stop listen port {}, stop proxy sever'.format(self._port))
         reactor.stop()
 
 
@@ -103,16 +103,16 @@ def main():
     check_thread = Thread(target=check_alive_thread)
 
     try:
-        print('启动检查客户端在线状态的线程')
+        print('start the thread of checking client online status')
         check_thread.start()
 
         server.start()
     except Exception as err:
         LOG.error(str(err))
     finally:
-        print('写入配置信息')
+        print('write config info')
         save_config(PROGRAM_CONFIG)
-        print('退出程序')
+        print('to exit progress')
 
 if __name__ == '__main__':
     main()
